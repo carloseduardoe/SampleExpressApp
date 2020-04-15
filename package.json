@@ -1,5 +1,5 @@
 {
-  "name": "rest-api-auth-with-express",
+  "name": "sample-express-app",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -17,6 +17,7 @@
   "dependencies": {
     "basic-auth": "^2.0.1",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.16.4",
     "express-validator": "^6.4.0",

@@ -2,6 +2,7 @@
 
 const dotenv    = require('dotenv'),
       express   = require('express'),
+      cors      = require('cors'),
       morgan    = require('morgan'),
       routesWeb = require('./src/routes-web'),
       routesApi = require('./src/routes-api');
@@ -11,12 +12,14 @@ dotenv.config();
 
 const app = express();
 
-
-// Setup request body JSON parsing.
-app.use(express.json());
+// Enable all CORS Requests
+app.use(cors());
 
 // Setup morgan which gives us HTTP request logging.
 app.use(morgan('dev'));
+
+// Setup request body JSON parsing.
+app.use(express.json());
 
 // Set app port.
 app.set('port', process.env.PORT || 8008);
