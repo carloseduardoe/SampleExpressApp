@@ -11,18 +11,18 @@ const users = [];
 // Validator
 const userValidator = [
     check('name').exists({ checkNull: true, checkFalsy: true })
-    .withMessage('name must have a value'),
+    .withMessage("name can't be empty"),
+
+    check('description').exists({ checkNull: true, checkFalsy: true })
+    .withMessage("description can't be empty"),
 
     check('email').exists({ checkNull: true, checkFalsy: true })
-    .withMessage('email must have a value').bail()
+    .withMessage("email can't be empty").bail()
     .normalizeEmail().isEmail()
     .withMessage('email does not have the correct format'),
 
-    check('password').exists({
-        checkNull: true,
-        checkFalsy: true
-    })
-    .withMessage('password must have a value'),
+    check('password').exists({ checkNull: true, checkFalsy: true })
+    .withMessage("password can't be empty"),
 ];
 
 
