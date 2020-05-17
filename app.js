@@ -1,11 +1,12 @@
 'use strict';
 
-const dotenv    = require('dotenv'),
-      express   = require('express'),
-      cors      = require('cors'),
-      morgan    = require('morgan'),
-      routesWeb = require('./src/routes-web'),
-      routesApi = require('./src/routes-api');
+const dotenv     = require('dotenv'),
+      express    = require('express'),
+      cors       = require('cors'),
+      morgan     = require('morgan'),
+      bodyParser = require('body-parser'),
+      routesWeb  = require('./src/routes-web'),
+      routesApi  = require('./src/routes-api');
 
 
 dotenv.config();
@@ -18,8 +19,11 @@ app.use(cors());
 // Setup morgan which gives us HTTP request logging.
 app.use(morgan('dev'));
 
-// Setup request body JSON parsing.
-app.use(express.json());
+// support parsing of application/json type post data
+app.use(bodyParser.json());
+
+//support parsing of application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Set app port.
 app.set('port', process.env.PORT || 8008);
@@ -48,7 +52,6 @@ app.use((err, req, res, next) => {
 
   next();
 });
-
 
 
 // Start listening
