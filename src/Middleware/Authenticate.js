@@ -1,12 +1,15 @@
 'use-strict'
 
-const auth     = require('basic-auth'),
-      bcryptjs = require('bcryptjs'),
+const bcryptjs = require('bcryptjs'),
+      auth     = require('basic-auth'),
       database = require('../TempDatabase');
 
 module.exports = (req, res, next) => {
     let message;
     // Parse the user's credentials from the Authorization header.
+
+    console.log(req.headers);
+
     const credentials = auth(req);
 
     // If the user's credentials are available...

@@ -1,54 +1,66 @@
 'use-strict'
 
-const database = require('../TempDatabase');
-
-// Array used as in memory database.
-const users = [];
+const database = require('../TempDatabase'),
+      bcrypt   = require('bcryptjs').hashSync,
+      uuid     = require('uuid').v4;
 
 
 const index = (req, res) => {
-    const user = req.currentUser;
-
-    res.status(200).json({
-        name: user.name,
-        email: user.email,
-    });
+    res.status(200).json(database.users);
 };
 
-const show = (req, res) => {};
+const show = (req, res) => {
+    const user = database.users.find(item => item.id === req.params.id);
 
-const edit = (req, res) => {};
+    if (user) {
+        res.status(200).json(user);
+        return;
+    }
+    
+    res.status(404).end();
+};
 
-const add = (req, res) => {
-    // Attempt to get the validation result from the Request object.
-    const errors = validationResult(req);
+const edit = (req, res) => {
+    const { name, email, password } = req.body;
+    let index = database.users.findIndex(item => item.id === req.params.id);
 
-    // If there are validation errors...
-    if (!errors.isEmpty()) {
-        // Use the Array `map()` method to get a list of error messages.
-        const errorMessages = errors.array().map(error => error.msg);
-
-        // Return the validation errors to the client.
-        return res.status(400).json({
-            errors: errorMessages
-        });
+    if (index === -1) {
+        return res.status(404).json({ message: 'User not found' });
     }
 
-    // Get the user from the request body.
-    const user = req.body;
+    database.users[index] = {
+        id:       database.users[index].id,
+        name:     name     ? name             : database.users[index].name,
+        email:    email    ? email            : database.users[index].email,
+        password: password ? bcrypt(password) : database.users[index].password 
+    };
 
-    // Hash the new user's password.
-    user.password = bcryptjs.hashSync(user.password);
-
-    // Add the user to the `users` array.
-    database.users.push(user);
-
-    // Set the status to 201 Created and end the response.
-    res.status(201).end();
+    res.status(200).json(database.users[index]);
 };
 
-const erase = (req, res) => {};
+const add = (req, res) => {
+    const user = (({ name, email, password }) => ({
+        id: uuid(),
+        name,
+        email,
+        password: bcrypt(password)
+    }))(req.body);
 
+    database.users.push(user);
+    
+    res.status(201).json(user);
+};
+
+const erase = (req, res) => {
+    let index = database.users.findIndex(item => item.id === req.params.id);
+
+    if (index > -1) {
+        database.users.splice(index, 1);
+        return res.status(200).json({ message: 'User deleted' });
+    }
+
+    res.status(404).json({ message: 'User not found' });
+};
 
 module.exports = {
     browse: index,

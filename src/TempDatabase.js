@@ -1,17 +1,21 @@
-class TempDatabase {
-    constructor() {
-        this.users = [];
-        this.tokens = {};
+const bcryptjs = require('bcryptjs'),
+      uuid     = require('uuid').v4;
 
-        setInterval(() => {
-            Object.keys(this.tokens).forEach(item => {
-                if (this.tokens[item].count)
-                    item.count--;
-                else
-                    delete this.tokens[item];
-            });
-        }, 1000);
-    }
-}
-
-module.exports = TempDatabase;
+module.exports = {
+    users: [{
+        id: uuid(),
+        name: 'John Doe',
+        email: 'john@gmail.com',
+        password: bcryptjs.hashSync('test')
+    }, {
+        id: uuid(),
+        name: 'Bob Williams',
+        email: 'bob@gmail.com',
+        password: bcryptjs.hashSync('test')
+    }, {
+        id: uuid(),
+        name: 'Shannon Jackson',
+        email: 'shannon@gmail.com',
+        password: bcryptjs.hashSync('test')
+    }]
+};

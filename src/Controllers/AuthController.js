@@ -2,17 +2,20 @@
 
 const auth       = require('basic-auth'),
       bcryptjs   = require('bcryptjs'),
-      bodyParser = require('body-parser'),
       database   = require('../TempDatabase');
 
+const findUser = email => {
+    return database.users.find(item => item.email === email);
+};
+
 const token = (req, res) => {
-    console.log("/token ->", req.body);
+    const params = req.body;
 
     res.status(200).json({
-        yo: "happy token here"
+        token: bcryptjs.hashSync(params.email + params.password)
     });
-}
+};
 
 module.exports = {
-    getToken: token
+    generateToken: token
 };

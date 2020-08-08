@@ -1,19 +1,51 @@
 'use-strict'
 
-const { check, validationResult } = require('express-validator');
+const {
+    check,
+    validationResult
+} = require('express-validator');
 
-module.exports = [
-    check('name').exists({ checkNull: true, checkFalsy: true })
-    .withMessage("name can't be empty"),
+const validators = {
+    name: check('name').trim().escape()
+        .not().isEmpty()
+        .withMessage("name can't be empty"),
+    
+    email: check('email').trim().escape()
+        .not().isEmpty()
+        .withMessage("email can't be empty").bail()
+        .normalizeEmail().isEmail()
+        .withMessage('email does not have the correct format'),
+    
+    password: check('password').trim().escape()
+        .not().isEmpty()
+        .withMessage("password can't be empty")
+}
 
-    check('description').exists({ checkNull: true, checkFalsy: true })
-    .withMessage("description can't be empty"),
+const reporter = (req, res, next) => {
+    const errors = validationResult(req);
 
-    check('email').exists({ checkNull: true, checkFalsy: true })
-    .withMessage("email can't be empty").bail()
-    .normalizeEmail().isEmail()
-    .withMessage('email does not have the correct format'),
+    if (!errors.isEmpty()) {
+        const errorMessages = errors.array().map(error => error.msg);
+        
+        return res.status(400).json({
+            errors: errorMessages
+        });
+    }
+    
+    next();
+}
 
-    check('password').exists({ checkNull: true, checkFalsy: true })
-    .withMessage("password can't be empty"),
-];
+module.exports = {
+    add: [
+        validators.name,
+        validators.email,
+        validators.password,
+        reporter
+    ],
+    edit: [
+        validators.name.optional(),
+        validators.email.optional(),
+        validators.password.optional(),
+        reporter
+    ]
+};

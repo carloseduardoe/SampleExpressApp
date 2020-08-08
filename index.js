@@ -1,15 +1,12 @@
 'use strict';
 
-const dotenv     = require('dotenv'),
-      express    = require('express'),
-      cors       = require('cors'),
-      morgan     = require('morgan'),
-      bodyParser = require('body-parser'),
-      routesWeb  = require('./src/routes-web'),
-      routesApi  = require('./src/routes-api');
+const express = require('express'),
+      path    = require('path'),
+      cors    = require('cors'),
+      morgan  = require('morgan'),
+      routes  = require('./src/Routes');
 
-
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
 
@@ -19,23 +16,21 @@ app.use(cors());
 // Setup morgan which gives us HTTP request logging.
 app.use(morgan('dev'));
 
-// support parsing of application/json type post data
-app.use(bodyParser.json());
+// Support parsing of application/json and application/x-www-form-urlencoded post data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-//support parsing of application/x-www-form-urlencoded post data
-app.use(bodyParser.urlencoded({ extended: true }));
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Set app port.
 app.set('port', process.env.PORT || 8008);
 
-
-// Different segments
-app.use('/', routesWeb);
-app.use('/api', routesApi);
-
+// Different routing segments
+app.use('/api', routes);
 
 // Standard 404
-app.use((req, res) => {
+app.use((req, res) => {H9SCGRz2S_H2dq
   res.status(404).json({
     message: 'Route Not Found',
   });
