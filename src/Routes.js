@@ -12,7 +12,7 @@ const authController = require('./Controllers/AuthController');
 const userController = require('./Controllers/UserController');
 
 // Route Definitions
-router.post('/token', authValidator, authController.generateToken);
+router.post('/token',    authValidator, authController.generateToken);
 
 router.get(   '/users',                         userController.browse);
 router.get(   '/users/:id',                     userController.read);

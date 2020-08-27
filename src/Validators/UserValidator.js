@@ -18,7 +18,21 @@ const validators = {
     
     password: check('password').trim().escape()
         .not().isEmpty()
-        .withMessage("password can't be empty")
+        .withMessage("password can't be empty").bail()
+        .matches(/^((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])).{8,32}$/)
+        .withMessage('the password must contain an uppercase letter, a lowercase letter, a digit and be between 8 and 32 characters long'),
+    
+    passwordConf: check('password2').trim().escape()
+        .not().isEmpty()
+        .withMessage("password confirmation can't be empty").bail()
+        .custom(async (confirmation, { req }) => { 
+            const password = req.body.password;
+            console.log(req.body.password,confirmation);
+            
+            if(password !== confirmation){ 
+                throw new Error();
+            } 
+        }).withMessage("password confirmation must match")
 }
 
 const reporter = (req, res, next) => {
@@ -40,6 +54,7 @@ module.exports = {
         validators.name,
         validators.email,
         validators.password,
+        validators.passwordConf,
         reporter
     ],
     edit: [

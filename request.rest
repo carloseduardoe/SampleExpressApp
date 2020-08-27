@@ -1,0 +1,23 @@
+GET http://localhost:5000/api/users
+
+###
+
+POST http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+    "name": "Abbey Did",
+    "email": "abbey@did2.com",
+    "password": "Abcdefgh1",
+    "password2": "Abcdefgh1"
+}
+
+###
+
+POST http://localhost:5000/api/token
+Content-Type: application/json
+
+{
+    "email": "abbey@did2.com",
+    "password": "Abcdefgh1"
+}

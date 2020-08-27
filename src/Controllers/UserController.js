@@ -1,8 +1,9 @@
 'use-strict'
 
 const database = require('../TempDatabase'),
-      bcrypt   = require('bcryptjs').hashSync,
-      uuid     = require('uuid').v4;
+      bcrypt   = require('bcryptjs'),
+      uuid     = require('uuid').v4,
+      User     = require('../Models/UserModel');
 
 
 const index = (req, res) => {
@@ -39,16 +40,29 @@ const edit = (req, res) => {
 };
 
 const add = (req, res) => {
-    const user = (({ name, email, password }) => ({
-        id: uuid(),
-        name,
-        email,
-        password: bcrypt(password)
-    }))(req.body);
+    const { name, email, password } = req.body;
+    const salt = bcrypt.genSaltSync(password.length);
+    const hash = bcrypt.hashSync(password, salt);
 
-    database.users.push(user);
-    
-    res.status(201).json(user);
+    User.findOne({
+        email: req.body.email
+    })
+    .then(item => {
+        if (item) {
+            return res.status(400).json({ message: 'The email is already in use' });
+        }
+
+        const user = new User({ name, email, hash });
+        user.save();
+
+        res.status(201).json({ message: 'User created successfully' });
+    })
+    .catch(error => {
+        res.status(500).json(error);
+        console.error('error', error)
+    });
+
+    database.users.push({ name, email, password: hash });
 };
 
 const erase = (req, res) => {
@@ -69,3 +83,4 @@ module.exports = {
     add:    add,
     delete: erase
 };
+
