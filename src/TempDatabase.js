@@ -14,5 +14,13 @@ module.exports = {
         name: 'Shannon Jackson',
         email: 'shannon@gmail.com',
         password: bcryptjs.hashSync('test')
-    }]
+    }],
+    posts: [{
+        email: "john@gmail.com",
+        title: "Sample Title"
+    },{
+        email: "bob@gmail.com",
+        title: "Sample Title 2"
+    }],
+    refresh: []
 };

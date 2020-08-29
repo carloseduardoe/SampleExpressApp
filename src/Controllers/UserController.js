@@ -55,14 +55,13 @@ const add = (req, res) => {
         const user = new User({ name, email, hash });
         user.save();
 
+        database.users.push({ name, email, password: hash });
+
         res.status(201).json({ message: 'User created successfully' });
     })
     .catch(error => {
         res.status(500).json(error);
-        console.error('error', error)
     });
-
-    database.users.push({ name, email, password: hash });
 };
 
 const erase = (req, res) => {

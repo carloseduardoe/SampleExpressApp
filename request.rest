@@ -14,10 +14,34 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:5000/api/login
+Content-Type: application/json
+
+{
+    "email": "shannon@gmail.com",
+    "password": "test"
+}
+
+###
+
+GET http://localhost:5000/api/posts
+Authorization: jwtToken
+
+###
+
 POST http://localhost:5000/api/token
 Content-Type: application/json
 
 {
-    "email": "abbey@did2.com",
-    "password": "Abcdefgh1"
+    "token": "jwtRefresh"
+}
+
+###
+
+POST http://localhost:5000/api/logout
+Content-Type: application/json
+Authorization: jwtToken
+
+{
+    "token": "jwtRefresh"
 }

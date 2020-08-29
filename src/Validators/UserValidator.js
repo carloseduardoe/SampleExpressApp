@@ -27,7 +27,6 @@ const validators = {
         .withMessage("password confirmation can't be empty").bail()
         .custom(async (confirmation, { req }) => { 
             const password = req.body.password;
-            console.log(req.body.password,confirmation);
             
             if(password !== confirmation){ 
                 throw new Error();
