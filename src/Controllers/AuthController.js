@@ -17,7 +17,12 @@ const validate = (email, password) => {
         return false;
     }
 
-    return bcryptjs.compareSync(password, user.password);
+    if (!bcryptjs.compareSync(password, user.password)) {
+        return false;
+    }
+
+    delete user.password;
+    return user;
 }
 
 const generateToken = (payload, access) => {
@@ -30,8 +35,9 @@ const generateToken = (payload, access) => {
 
 const authenticate = (req, res) => {
     const { email, password } = req.body;
+    const user = validate(email, password);
 
-    if (!validate(email, password)) {
+    if (!user) {
         return dismiss(res);
     }
 
@@ -41,8 +47,9 @@ const authenticate = (req, res) => {
     database.refresh.push(refresh);
 
     return res.status(200).json({
-        token: token,
-        refresh: refresh
+        ...user,
+        token,
+        refresh
     });
 };
 

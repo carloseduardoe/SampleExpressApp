@@ -1,17 +1,21 @@
 const bcryptjs = require('bcryptjs'),
-      uuid     = require('uuid').v4;
+      jwt      = require('jsonwebtoken'),
+      moment   = require('moment');
 
-module.exports = {
+const database = {
     users: [{
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         email: 'john@gmail.com',
         password: bcryptjs.hashSync('test')
     }, {
-        name: 'Bob Williams',
+        firstName: 'Bob',
+        lastName: 'Williams',
         email: 'bob@gmail.com',
         password: bcryptjs.hashSync('test')
     }, {
-        name: 'Shannon Jackson',
+        firstName: 'Shannon',
+        lastName: 'Jackson',
         email: 'shannon@gmail.com',
         password: bcryptjs.hashSync('test')
     }],
@@ -24,3 +28,22 @@ module.exports = {
     }],
     refresh: []
 };
+
+// const interval = setInterval(() => {
+//     database.refresh = database.refresh.filter(async (item, index) => {
+//         const check = await jwt.verify(item, process.env.REFRESH_SECRET, (err, payload) => {
+//             if (err) {
+//                 return false;
+//             }
+
+//             const issuedAt = new Date(0);
+//             issuedAt.setUTCSeconds(payload.iat);
+
+//             return (new Date() - issuedAt) > process.env.REFRESH_EXPIRATION_MS;
+//         });
+
+//         return check;
+//     });
+// }, 60000);
+
+module.exports = database;

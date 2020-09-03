@@ -2,7 +2,6 @@
 
 const database = require('../TempDatabase'),
       bcrypt   = require('bcryptjs'),
-      uuid     = require('uuid').v4,
       User     = require('../Models/UserModel');
 
 
