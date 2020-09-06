@@ -1,9 +1,6 @@
 'use-strict'
 
-const {
-    check,
-    validationResult
-} = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 const generateValidators = () => [
     check('first_name').trim().escape()
@@ -53,7 +50,7 @@ const reporter = (req, res, next) => {
     next();
 }
 
-const returned = {
+module.exports = {
     add: [
         generateValidators(),
         reporter
@@ -63,5 +60,3 @@ const returned = {
         reporter
     ]
 };
-
-module.exports = returned;
