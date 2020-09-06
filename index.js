@@ -42,7 +42,7 @@ const errorLogger = err => {
   console.error(`Error: ${JSON.stringify(err, null, 4)}`);
 
   return {
-    message: `Error: ${err.message}`,
+    message: `Error, ${err.message}`,
     error: process.env.ENV === 'prod' ? {} : err
   };
 }

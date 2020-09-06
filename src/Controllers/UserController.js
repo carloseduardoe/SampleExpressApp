@@ -39,7 +39,7 @@ const edit = (req, res) => {
 };
 
 const add = (req, res) => {
-    const { name, email, password } = req.body;
+    const { first_name, last_name, email, password } = req.body;
     const salt = bcrypt.genSaltSync(password.length);
     const hash = bcrypt.hashSync(password, salt);
 
@@ -51,10 +51,10 @@ const add = (req, res) => {
             return res.status(400).json({ message: 'The email is already in use' });
         }
 
-        const user = new User({ name, email, hash });
+        const user = new User({ first_name, last_name, email, hash });
         user.save();
 
-        database.users.push({ name, email, password: hash });
+        database.users.push({ first_name, last_name, email, password: hash });
 
         res.status(201).json({ message: 'User created successfully' });
     })

@@ -5,24 +5,28 @@ const {
     validationResult
 } = require('express-validator');
 
-const validators = {
-    name: check('name').trim().escape()
+const generateValidators = () => [
+    check('first_name').trim().escape()
         .not().isEmpty()
-        .withMessage("name can't be empty"),
+        .withMessage("first name can't be empty"),
     
-    email: check('email').trim().escape()
+    check('last_name').trim().escape()
+        .not().isEmpty()
+        .withMessage("last name can't be empty"),
+    
+    check('email').trim().escape()
         .not().isEmpty()
         .withMessage("email can't be empty").bail()
         .normalizeEmail().isEmail()
         .withMessage('email does not have the correct format'),
     
-    password: check('password').trim().escape()
+    check('password').trim().escape()
         .not().isEmpty()
         .withMessage("password can't be empty").bail()
         .matches(/^((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])).{8,32}$/)
         .withMessage('the password must contain an uppercase letter, a lowercase letter, a digit and be between 8 and 32 characters long'),
     
-    passwordConf: check('password2').trim().escape()
+    check('password2').trim().escape()
         .not().isEmpty()
         .withMessage("password confirmation can't be empty").bail()
         .custom(async (confirmation, { req }) => { 
@@ -31,8 +35,9 @@ const validators = {
             if(password !== confirmation){ 
                 throw new Error();
             } 
-        }).withMessage("password confirmation must match")
-}
+        })
+        .withMessage("password confirmation must match")
+]
 
 const reporter = (req, res, next) => {
     const errors = validationResult(req);
@@ -48,18 +53,15 @@ const reporter = (req, res, next) => {
     next();
 }
 
-module.exports = {
+const returned = {
     add: [
-        validators.name,
-        validators.email,
-        validators.password,
-        validators.passwordConf,
+        generateValidators(),
         reporter
     ],
     edit: [
-        validators.name.optional(),
-        validators.email.optional(),
-        validators.password.optional(),
+        generateValidators().map(item => item.optional()),
         reporter
     ]
 };
+
+module.exports = returned;

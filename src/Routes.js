@@ -14,8 +14,8 @@ const control = [authValidator.authorize, authController.authorize];
 
 // Route Definitions
 router.post('/login',    authValidator.authenticate, authController.authenticate);
-router.post('/token',    authValidator.token, authController.token);
-router.post('/logout',   authValidator.authorize, authController.deauthenticate, authController.deauthenticate);
+router.post('/token',    authValidator.token,        authController.token);
+router.post('/logout',   authValidator.authorize,    authController.deauthenticate);
 
 router.get(   '/users',                         userController.browse);
 router.get(   '/users/:id',                     userController.read);
